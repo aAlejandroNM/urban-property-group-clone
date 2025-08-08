@@ -31,7 +31,6 @@ export default function Navbar({ transparentOnHero = false, heroHeight = 400 }: 
     { href: "/about", label: "About" },
     { href: "/projects", label: "Projects" },
     { href: "/services", label: "Services" },
-    { href: "/careers", label: "Careers" },
     { href: "/contact", label: "Contact" },
   ];
 
@@ -54,31 +53,39 @@ export default function Navbar({ transparentOnHero = false, heroHeight = 400 }: 
   `;
 
   const linkClasses = (active: boolean) => `
-    px-3 py-2 text-sm font-medium transition-colors duration-200
+    relative px-3 py-2 text-sm font-medium transition-colors duration-200 group
     ${isScrolled || !transparentOnHero
       ? active
-        ? 'text-black border-b-2 border-black'
+        ? 'text-black'
         : 'text-gray-700 hover:text-black'
       : active
-        ? 'text-white border-b-2 border-white'
+        ? 'text-white'
         : 'text-white/80 hover:text-white'
     }
   `;
-  
+
+  const underlineClasses = (active: boolean) => `
+    absolute bottom-0 left-1/2 h-0.5 bg-current transform -translate-x-1/2 transition-all duration-300 ease-out
+    ${active
+      ? 'w-full'
+      : 'w-0 group-hover:w-full'
+    }
+  `;
+
   return (
     <header className={navbarClasses}>
       <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
-          {/* Logo */}
+        <div className="flex items-center justify-between h-16">
+          {/* Logo - Left aligned */}
           <div className="flex-shrink-0">
             <Link href="/" className={`text-2xl font-bold transition-colors duration-200 ${textClasses}`}>
               URBAN
             </Link>
           </div>
 
-          {/* Desktop Navigation */}
-          <div className="hidden md:block">
-            <div className="ml-10 flex items-baseline space-x-8">
+          {/* Centered Navigation - Desktop */}
+          <div className="hidden md:flex absolute left-1/2 transform -translate-x-1/2">
+            <div className="flex items-center space-x-8">
               {navLinks.map((link) => (
                 <Link
                   key={link.href}
@@ -86,12 +93,13 @@ export default function Navbar({ transparentOnHero = false, heroHeight = 400 }: 
                   className={linkClasses(isActive(link.href))}
                 >
                   {link.label}
+                  <span className={underlineClasses(isActive(link.href))} />
                 </Link>
               ))}
             </div>
           </div>
 
-          {/* Mobile menu button */}
+          {/* Mobile menu button - Right aligned */}
           <div className="md:hidden">
             <button
               type="button"
@@ -103,6 +111,9 @@ export default function Navbar({ transparentOnHero = false, heroHeight = 400 }: 
               </svg>
             </button>
           </div>
+
+          {/* Empty div to balance the flex layout */}
+          <div className="hidden md:block w-20"></div>
         </div>
       </nav>
     </header>
