@@ -74,11 +74,11 @@ export default function Navbar({ transparentOnHero = false, heroHeight = 400 }: 
 
   return (
     <header className={navbarClasses}>
-      <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
+      <nav className="font-graphik max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between h-20">
           {/* Logo - Left aligned */}
           <div className="flex-shrink-0">
-            <Link href="/" className={`text-2xl font-bold transition-colors duration-200 ${textClasses}`}>
+            <Link href="/" className={`text-[2rem] font-bold transition-colors duration-200 ${textClasses}`}>
               URBAN
             </Link>
           </div>
@@ -90,7 +90,7 @@ export default function Navbar({ transparentOnHero = false, heroHeight = 400 }: 
                 <Link
                   key={link.href}
                   href={link.href}
-                  className={linkClasses(isActive(link.href))}
+                  className={linkClasses(isActive(link.href)) + " text-3xl pt-6"}
                 >
                   {link.label}
                   <span className={underlineClasses(isActive(link.href))} />
