@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useRef } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -12,20 +13,23 @@ interface NavbarProps {
 export default function Navbar({ transparentOnHero = false, heroHeight = 400 }: NavbarProps) {
   const [isScrolled, setIsScrolled] = useState(false);
   const pathname = usePathname();
+  const [showNavbar, setShowNavbar] = useState(true);
+  const lastScrollY = useRef(0);
 
   useEffect(() => {
     const handleScroll = () => {
-      const scrollTop = window.scrollY;
-      const shouldShowBackground = transparentOnHero ? scrollTop > heroHeight * 0.3 : true;
-      setIsScrolled(shouldShowBackground);
+      const currentScrollY = window.scrollY;
+      if (currentScrollY > lastScrollY.current && currentScrollY > 80) {
+        setShowNavbar(false); // Oculta al bajar
+      } else {
+        setShowNavbar(true); // Muestra al subir
+      }
+      lastScrollY.current = currentScrollY;
     };
-
-    // Set initial state
-    handleScroll();
 
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
-  }, [transparentOnHero, heroHeight]);
+  }, []);
 
   const navLinks = [
     { href: "/about", label: "About" },
@@ -73,7 +77,7 @@ export default function Navbar({ transparentOnHero = false, heroHeight = 400 }: 
   `;
 
   return (
-    <header className={navbarClasses}>
+    <header className={`${navbarClasses} transition-transform duration-300 ${showNavbar ? "translate-y-0" : "-translate-y-full"}`}>
       <nav className="font-graphik max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-20">
           {/* Logo - Left aligned */}
