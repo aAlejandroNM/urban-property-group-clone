@@ -18,18 +18,22 @@ export default function Navbar({ transparentOnHero = false, heroHeight = 400 }: 
 
   useEffect(() => {
     const handleScroll = () => {
+      setIsScrolled(window.scrollY > heroHeight);
+
       const currentScrollY = window.scrollY;
       if (currentScrollY > lastScrollY.current && currentScrollY > 80) {
-        setShowNavbar(false); // Oculta al bajar
+        setShowNavbar(false);
       } else {
-        setShowNavbar(true); // Muestra al subir
+        setShowNavbar(true);
       }
       lastScrollY.current = currentScrollY;
     };
 
     window.addEventListener("scroll", handleScroll);
+    // Ejecuta una vez al montar para el estado inicial
+    handleScroll();
     return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  }, [heroHeight]);
 
   const navLinks = [
     { href: "/about", label: "About" },
