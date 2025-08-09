@@ -1,13 +1,14 @@
 "use client";
 
 import Link from "next/link";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import Navbar from "@/components/ui/Navbar";
+import { useState } from "react";
 
 // Animation variants
 const fadeInUp = {
@@ -44,6 +45,54 @@ const staggerChildren = {
 };
 
 export default function Home() {
+  // Carrusel de proyectos
+  const projects = [
+    {
+      image: "https://ext.same-assets.com/319956013/1658223507.jpeg",
+      title: "The Waterfront, CCQ",
+      location: "GOSFORD, NSW",
+      status: "NOW SELLING"
+    },
+    {
+      image: "https://ext.same-assets.com/319956013/1019608060.jpeg",
+      title: "ESTE",
+      location: "LITTLE BAY, NSW",
+      status: "NOW SELLING"
+    },
+    {
+      image: "https://ext.same-assets.com/319956013/1366628589.png",
+      title: "The Halston",
+      location: "NORTH STRATHFIELD, NSW",
+      status: "NOW SELLING"
+    }
+  ];
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [direction, setDirection] = useState(0);
+
+  const handlePrev = () => {
+    setDirection(-1);
+    setCurrentIndex((prev) => (prev === 0 ? projects.length - 1 : prev - 1));
+  };
+
+  const handleNext = () => {
+    setDirection(1);
+    setCurrentIndex((prev) => (prev === projects.length - 1 ? 0 : prev + 1));
+  };
+
+  // Para mostrar siempre 3 imágenes (previa, actual, siguiente)
+  const getVisibleProjects = () => {
+    const prev = (currentIndex - 1 + projects.length) % projects.length;
+    const next = (currentIndex + 1) % projects.length;
+    return [projects[prev], projects[currentIndex], projects[next]];
+  };
+
+  // Nueva animación de slide robusta
+  const slideFadeVariants = {
+    hiddenLeft: { opacity: 0, x: -100 },
+    hiddenRight: { opacity: 0, x: 100 },
+    visible: { opacity: 1, x: 0 }
+  };
+
   return (
     <div className="relative min-h-screen">
       {/* Background Image */}
@@ -146,52 +195,145 @@ export default function Home() {
               Places We're Creating.
             </motion.h2>
 
-            <motion.div
-              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16"
-              variants={staggerChildren}
-            >
-              {/* Project Cards */}
-              {[
-                {
-                  image: "https://ext.same-assets.com/319956013/1658223507.jpeg",
-                  title: "The Waterfront, CCQ",
-                  location: "GOSFORD, NSW",
-                  status: "NOW SELLING"
-                },
-                {
-                  image: "https://ext.same-assets.com/319956013/1019608060.jpeg",
-                  title: "ESTE",
-                  location: "LITTLE BAY, NSW",
-                  status: "NOW SELLING"
-                },
-                {
-                  image: "https://ext.same-assets.com/319956013/1366628589.png",
-                  title: "The Halston",
-                  location: "NORTH STRATHFIELD, NSW",
-                  status: "NOW SELLING"
-                }
-              ].map((project, index) => (
-                <motion.div key={index} variants={fadeInUp}>
-                  <Card className="overflow-hidden border-0 shadow-lg hover:shadow-xl transition-shadow duration-300">
-                    <div className="relative">
-                      <img
-                        src={project.image}
-                        alt={project.title}
-                        className="w-full h-64 object-cover"
-                      />
-                      <div className="absolute bottom-4 right-4 bg-white bg-opacity-90 px-2 py-1 text-xs text-gray-600">
-                        Artist's impression only*
-                      </div>
-                    </div>
-                    <CardContent className="p-6">
-                      <h3 className="text-xl font-bold text-black mb-2">{project.title}</h3>
-                      <p className="text-sm text-gray-500 mb-1">{project.location}</p>
-                      <p className="text-sm font-medium text-black">{project.status}</p>
-                    </CardContent>
-                  </Card>
-                </motion.div>
-              ))}
-            </motion.div>
+            {/* Carrusel Mejorado: reemplaza el div relativo actual por esto */}
+            <div className="relative mb-16">
+              {/* Flechas - moved a top-outside (fuera de la imagen) */}
+              <div className="absolute -top-6 right-0 translate-x-full flex space-x-2 z-30">
+                <button onClick={handlePrev} className="transition flex items-center justify-center" aria-label="Anterior">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 21 19"
+                    fill="none"
+                    className="h-5 w-auto text-black"
+                  >
+                    <path stroke="currentColor" strokeWidth="1.5" d="M20.959 9.379H1.999" />
+                    <path stroke="currentColor" strokeWidth="1.5" d="m10.379 1-8.38 8.379 8.38 8.379" />
+                  </svg>
+                </button>
+                <button onClick={handleNext} className="transition flex items-center justify-center" aria-label="Siguiente">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 21 19"
+                    fill="none"
+                    className="h-5 w-auto text-black"
+                  >
+                    <g transform="scale(-1,1) translate(-21,0)">
+                      <path stroke="currentColor" strokeWidth="1.5" d="M20.959 9.379H1.999" />
+                      <path stroke="currentColor" strokeWidth="1.5" d="m10.379 1-8.38 8.379 8.38 8.379" />
+                    </g>
+                  </svg>
+                </button>
+              </div>
+              <div className="w-screen left-1/2 -translate-x-1/2 relative overflow-visible">
+                {/* Ajusté gap-x para reducir el espacio entre tarjetas */}
+                <div className="grid grid-cols-1 md:[grid-template-columns:1fr_auto_1fr] justify-center items-centermin-h-[34rem] gap-x-4 px-4 md:px-0">
+                  {(() => {
+                    const visible = getVisibleProjects();
+                    const [left, center, right] = visible;
+
+                    /* Variants para la animación con dirección */
+                    const centerVariants = {
+                      enter: (dir) => ({ x: dir > 0 ? 220 : -220, opacity: 0, scale: 0.98 }),
+                      center: { x: 0, opacity: 1, scale: 1 },
+                      exit: (dir) => ({ x: dir > 0 ? -220 : 220, opacity: 0, scale: 0.98 }),
+                    };
+
+                    const sideVariants = {
+                      hiddenLeft: { x: -60, opacity: 0.6, scale: 0.95 },
+                      visible: { x: 0, opacity: 0.75, scale: 0.95 },
+                      hiddenRight: { x: 60, opacity: 0.6, scale: 0.95 },
+                    };
+
+                    return (
+                      <>
+                        {/* IZQUIERDA */}
+                        <div className="flex justify-start">
+                          <motion.div
+                            key={`left-${currentIndex}`}
+                            className="transition-all duration-300 w-[50vw] md:w-[280px] scale-90 opacity-70 pointer-events-none"
+                            variants={sideVariants}
+                            initial="hiddenLeft"
+                            animate="visible"
+                            transition={{ type: "tween", duration: 0.45 }}
+                          >
+                            <Card className="overflow-hidden border-0 shadow-lg hover:shadow-xl transition-shadow duration-300 w-full">
+                              <div className="relative">
+                                <img src={left.image} alt={left.title} className="w-full h-[24rem] object-cover rounded-md" />
+                                <div className="absolute bottom-4 right-4 bg-white bg-opacity-90 px-2 py-1 text-xs text-gray-600">
+                                  Artist's impression only*
+                                </div>
+                              </div>
+                              <CardContent className="p-6">
+                                <h3 className="text-xl font-bold text-black mb-2">{left.title}</h3>
+                                <p className="text-sm text-gray-500 mb-1">{left.location}</p>
+                                <p className="text-sm font-medium text-black">{left.status}</p>
+                              </CardContent>
+                            </Card>
+                          </motion.div>
+                        </div>
+
+                        {/* CENTRO (AnimatePresence para slide limpio) */}
+                        <div className="flex justify-center">
+                          <AnimatePresence initial={false} custom={direction}>
+                            <motion.div
+                              key={currentIndex}             // importante: key cambia al cambiar currentIndex
+                              custom={direction}             // pasa la dirección al variant
+                              variants={centerVariants}
+                              initial="enter"
+                              animate="center"
+                              exit="exit"
+                              transition={{ type: "tween", duration: 0.5, ease: "easeInOut" }}
+                              className="transition-all duration-300 w-[75vw] md:w-[460px] z-20"
+                              style={{ pointerEvents: 'auto' }}
+                            >
+                              <Card className="overflow-hidden border-0 shadow-2xl hover:shadow-xl transition-shadow duration-300 w-full">
+                                <div className="relative">
+                                  <img src={center.image} alt={center.title} className="w-full h-[24rem] object-cover rounded-md" />
+                                  <div className="absolute bottom-4 right-4 bg-white bg-opacity-90 px-2 py-1 text-xs text-gray-600">
+                                    Artist's impression only*
+                                  </div>
+                                </div>
+                                <CardContent className="p-6">
+                                  <h3 className="text-xl font-bold text-black mb-2">{center.title}</h3>
+                                  <p className="text-sm text-gray-500 mb-1">{center.location}</p>
+                                  <p className="text-sm font-medium text-black">{center.status}</p>
+                                </CardContent>
+                              </Card>
+                            </motion.div>
+                          </AnimatePresence>
+                        </div>
+
+                        {/* DERECHA */}
+                        <div className="flex justify-end">
+                          <motion.div
+                            key={`right-${currentIndex}`}
+                            className="transition-all duration-300 w-[50vw] md:w-[280px] scale-90 opacity-70 pointer-events-none"
+                            variants={sideVariants}
+                            initial="hiddenRight"
+                            animate="visible"
+                            transition={{ type: "tween", duration: 0.45 }}
+                          >
+                            <Card className="overflow-hidden border-0 shadow-lg hover:shadow-xl transition-shadow duration-300 w-full">
+                              <div className="relative">
+                                <img src={right.image} alt={right.title} className="w-full h-[24rem] object-cover rounded-md" />
+                                <div className="absolute bottom-4 right-4 bg-white bg-opacity-90 px-2 py-1 text-xs text-gray-600">
+                                  Artist's impression only*
+                                </div>
+                              </div>
+                              <CardContent className="p-6">
+                                <h3 className="text-xl font-bold text-black mb-2">{right.title}</h3>
+                                <p className="text-sm text-gray-500 mb-1">{right.location}</p>
+                                <p className="text-sm font-medium text-black">{right.status}</p>
+                              </CardContent>
+                            </Card>
+                          </motion.div>
+                        </div>
+                      </>
+                    );
+                  })()}
+                </div>
+              </div>
+            </div>
 
             <motion.div className="text-center" variants={fadeInUp}>
               <Link href="/projects" className="inline-flex items-center justify-center px-8 py-3 border border-gray-300 text-base font-medium rounded-full text-gray-700 bg-white hover:bg-gray-50 transition-colors">
