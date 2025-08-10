@@ -94,6 +94,21 @@ export default function Home() {
     visible: { opacity: 1, x: 0 }
   };
 
+  // Estado para controlar el tipo expandido
+  const [expandedType, setExpandedType] = useState<string | null>(null);
+
+  // Handler para alternar el despliegue
+  const handleToggleType = (type: string) => {
+    setExpandedType(expandedType === type ? null : type);
+  };
+
+  // Variante para fade-down
+  const fadeDown = {
+    hidden: { opacity: 0, y: -20 },
+    visible: { opacity: 1, y: 0 },
+    exit: { opacity: 0, y: -20 }
+  };
+
   return (
     <div className="relative min-h-screen">
       {/* Background Image */}
@@ -210,7 +225,7 @@ export default function Home() {
               className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center mb-20 mt-20"
               variants={staggerChildren}
             >
-              <motion.div variants={fadeInLeft}>
+              <motion.div variants={fadeInLeft} className="h-96 flex items-center">
                 <img
                   src="https://ext.same-assets.com/319956013/722020479.jpeg"
                   alt="Development types"
@@ -225,10 +240,33 @@ export default function Home() {
                     variants={fadeInUp}
                     transition={{ delay: index * 0.1 }}
                   >
-                    <button className="flex justify-between items-center w-full text-left hover:opacity-80 transition-opacity">
+                    <button
+                      className="flex justify-between items-center w-full text-left hover:opacity-80 transition-opacity"
+                      onClick={() => handleToggleType(type)}
+                      aria-expanded={expandedType === type}
+                      aria-controls={`desc-${type}`}
+                    >
                       <span className="text-xl font-bold text-black">{type}</span>
-                      <span className="text-2xl text-gray-400">+</span>
+                      <span className={`text-2xl text-gray-400 transition-transform duration-200 ${expandedType === type ? "rotate-45" : ""}`}>+</span>
                     </button>
+                    <AnimatePresence initial={false}>
+                      {expandedType === type && (
+                        <motion.div
+                          id={`desc-${type}`}
+                          key={type}
+                          initial={{ opacity: 0, height: 0 }}
+                          animate={{ opacity: 1, height: "auto" }}
+                          exit={{ opacity: 0, height: 0 }}
+                          transition={{ opacity: { duration: 0.25 }, height: { duration: 0.35, ease: [0.4, 0, 0.2, 1] } }}
+                          className="overflow-hidden"
+                        >
+                          <div className="mt-4 text-gray-700 text-base">
+                            Urban delivers a diverse portfolio of residential communities from mixed-use precincts in growing urban hubs to thoughtfully designed developments in coastal and regional locations.<br />
+                            Across every project, we prioritise the experience of our residents, creating homes we’d proudly live in ourselves.
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
                   </motion.div>
                 ))}
               </motion.div>
