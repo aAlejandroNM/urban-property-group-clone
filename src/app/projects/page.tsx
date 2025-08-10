@@ -4,6 +4,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Navbar from "@/components/ui/Navbar";
+import CarouselProjects from "@/components/ui/carouselProjects";
 
 export default function ProjectsPage() {
   const projects = [
@@ -155,35 +156,43 @@ export default function ProjectsPage() {
   return (
     <div className="min-h-screen bg-white">
       {/* Shared Navbar */}
-      <Navbar />
+      <Navbar transparentOnHero={true} heroHeight={600} />
 
       {/* Hero Carousel Section */}
-      <section className="relative h-screen flex items-end pb-20 overflow-hidden">
-        <div
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-          style={{
-            backgroundImage: `url('https://ext.same-assets.com/319956013/1019608060.jpeg')`
-          }}
-        >
-          <div className="absolute inset-0 bg-black bg-opacity-30"></div>
-        </div>
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
-          <div className="text-white">
-            <h1 className="text-4xl md:text-6xl font-bold mb-4">The Halston</h1>
-            <p className="text-lg opacity-90">NSW, NORTH STRATHFIELD</p>
-          </div>
-        </div>
-
-        {/* Carousel Dots */}
-        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex space-x-2 z-20">
-          {[...Array(6)].map((_, i) => (
-            <button
-              key={i}
-              className={`w-3 h-3 rounded-full ${i === 0 ? 'bg-white' : 'bg-white bg-opacity-50'}`}
-            />
-          ))}
-        </div>
-      </section>
+      <CarouselProjects
+        projects={[
+          {
+            id: 1,
+            name: "The Waterfront, CCQ",
+            location: "Gosford, NSW",
+            image: "https://ext.same-assets.com/319956013/1658223507.jpeg"
+          },
+          {
+            id: 2,
+            name: "ESTE",
+            location: "Little Bay, NSW",
+            image: "https://ext.same-assets.com/319956013/1019608060.jpeg"
+          },
+          {
+            id: 3,
+            name: "The Halston",
+            location: "North Strathfield, NSW",
+            image: "https://ext.same-assets.com/319956013/1366628589.png"
+          },
+          {
+            id: 4,
+            name: "La Vera",
+            location: "Macquarie Park, NSW",
+            image: "https://ext.same-assets.com/319956013/811950631.jpeg"
+          },
+          {
+            id: 5,
+            name: "Edmondson Park Terraces",
+            location: "Edmondson Park, NSW",
+            image: "https://ext.same-assets.com/319956013/2679136212.jpeg"
+          }
+        ]}
+      />
 
       {/* Projects Section */}
       <section className="py-20 bg-white">
