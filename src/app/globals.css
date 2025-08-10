@@ -67,3 +67,28 @@
     @apply bg-background text-foreground;
   }
 }
+
+.reveal-item {
+    opacity: 0;
+    transform: translateY(-22px);
+    transition-property: opacity, transform, mask-image, -webkit-mask-image;
+    transition-duration: 0.7s;
+    transition-timing-function: cubic-bezier(.2,.9,.2,1);
+    /* máscara degradada inicial (suaviza el "fade in" desde arriba) */
+    mask-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.35) 25%, rgba(0,0,0,1) 100%);
+    -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.35) 25%, rgba(0,0,0,1) 100%);
+    will-change: transform, opacity;
+}
+
+/* Estado revelado */
+.reveal-item.is-revealed {
+    opacity: 1;
+    transform: translateY(0);
+    mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 100%);
+    -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 100%);
+}
+
+/* Helpers para stagger dentro */
+.reveal-stagger > * {
+/* cada hijo puede recibir un delay con inline-style o aquí con CSS variables */
+}
