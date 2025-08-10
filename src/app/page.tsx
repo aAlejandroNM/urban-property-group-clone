@@ -282,9 +282,9 @@ export default function Home() {
           viewport={{ once: true, amount: 0.3 }}
           variants={staggerChildren}
         >
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <div className="font-graphik max-w-7xl mx-auto px-0 text-left">
             <motion.h2
-              className="text-5xl font-bold text-black mb-20"
+              className="text-5xl font-bold text-black mb-20 max-w-[50%] break-words -ml-8"
               variants={fadeInUp}
             >
               No shortcuts. No compromises. Just great places, built for living.
@@ -315,7 +315,7 @@ export default function Home() {
         </motion.section>
 
         {/* Awards Section */}
-        <motion.section
+        {/*}<motion.section
           className="py-20 bg-white"
           initial="hidden"
           whileInView="visible"
@@ -366,7 +366,7 @@ export default function Home() {
               ))}
             </motion.div>
           </div>
-        </motion.section>
+        </motion.section>*/}
 
         {/* News Section */}
         <motion.section
