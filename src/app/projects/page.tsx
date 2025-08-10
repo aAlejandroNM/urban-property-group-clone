@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -5,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Navbar from "@/components/ui/Navbar";
 import CarouselProjects from "@/components/ui/carouselProjects";
+import Reveal from "@/components/ui/Reveal";
 
 export default function ProjectsPage() {
   const projects = [
@@ -159,6 +162,7 @@ export default function ProjectsPage() {
       <Navbar transparentOnHero={true} heroHeight={600} />
 
       {/* Hero Carousel Section */}
+      <Reveal>
       <CarouselProjects
         projects={[
           {
@@ -193,16 +197,24 @@ export default function ProjectsPage() {
           }
         ]}
       />
+      </Reveal>
+
+        {/* Welcome Section */}
 
       {/* Projects Section */}
       <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-5xl font-bold text-center text-black mb-16">
-            Our Projects
-          </h2>
+          <Reveal>
+              <h2 className="text-5xl font-bold text-center text-black mb-16">
+                Our Projects
+              </h2>
+          </Reveal>
+
+            {/* Featured Projects Carousel */}
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8 mb-20">
             {projects.map((project) => (
+              <Reveal key={project.id} className="delay-100">
               <Card key={project.id} className="overflow-hidden border-0 shadow-lg group cursor-pointer">
                 <div className="relative">
                   <img
@@ -220,10 +232,12 @@ export default function ProjectsPage() {
                   <p className={getStatusColor(project.status)}>{project.status}</p>
                 </CardContent>
               </Card>
+              </Reveal>
             ))}
           </div>
 
           {/* View by Location Section */}
+          <Reveal>
           <div className="mb-20">
             <h3 className="text-3xl font-bold text-black mb-8">View by location</h3>
             <div className="bg-gray-100 rounded-lg h-96 flex items-center justify-center">
@@ -236,6 +250,7 @@ export default function ProjectsPage() {
               </div>
             </div>
           </div>
+          </Reveal>
         </div>
       </section>
 
@@ -246,6 +261,7 @@ export default function ProjectsPage() {
             {/* Contact Info */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               <div>
+                <Reveal>
                 <h3 className="text-lg font-medium mb-4">Navigate</h3>
                 <ul className="space-y-2 text-gray-300">
                   <li><Link href="/" className="hover:text-white">Home</Link></li>
@@ -253,9 +269,11 @@ export default function ProjectsPage() {
                   <li><Link href="/careers" className="hover:text-white">Careers</Link></li>
                   <li><Link href="/contact" className="hover:text-white">Contact</Link></li>
                 </ul>
+                </Reveal>
               </div>
 
               <div>
+                <Reveal>
                 <h3 className="text-lg font-medium mb-4">Contact</h3>
                 <div className="text-gray-300 space-y-2">
                   <p>Suite 110, Level 1</p>
@@ -264,9 +282,11 @@ export default function ProjectsPage() {
                   <p className="mt-4">(02) 9744 3333</p>
                   <p>reception@urbanpropertygroup.com.au</p>
                 </div>
+                </Reveal>
               </div>
 
               <div>
+                <Reveal>
                 <h3 className="text-lg font-medium mb-4">Connect</h3>
                 <ul className="space-y-2 text-gray-300">
                   <li><a href="#" className="hover:text-white">Instagram</a></li>
@@ -274,10 +294,12 @@ export default function ProjectsPage() {
                   <li><a href="#" className="hover:text-white">YouTube</a></li>
                   <li><a href="#" className="hover:text-white">LinkedIn</a></li>
                 </ul>
+                </Reveal>
               </div>
             </div>
 
             {/* Newsletter Signup */}
+            <Reveal>
             <div>
               <h3 className="text-lg font-medium mb-4">Get Urban Updates</h3>
               <form className="space-y-4">
@@ -319,18 +341,23 @@ export default function ProjectsPage() {
                 </Button>
               </form>
             </div>
+            </Reveal>
           </div>
 
           {/* Bottom Footer */}
           <div className="border-t border-gray-800 mt-12 pt-8">
             <div className="flex flex-col md:flex-row justify-between items-center">
+            <Reveal>
               <div className="text-gray-400 text-sm mb-4 md:mb-0">
                 <p>Urban Property Group acknowledges the Traditional Custodians of the land which our business operates. We pay our respects to Aboriginal and Torres Strait Islanders Elders past, present and future.</p>
               </div>
+            </Reveal>
+            <Reveal>
               <div className="flex items-center">
                 <h1 className="text-2xl font-bold">URBAN</h1>
                 <span className="ml-2 text-sm text-gray-400">PROPERTY</span>
               </div>
+            </Reveal>
             </div>
             <div className="text-center text-gray-400 text-sm mt-4">
               © Urban Property Group 2025
