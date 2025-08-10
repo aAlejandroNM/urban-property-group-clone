@@ -1,8 +1,12 @@
+"use client";
+
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Navbar from "@/components/ui/Navbar";
+import { motion, AnimatePresence } from "framer-motion";
+import { useState } from "react";
 
 export default function AboutPage() {
   const teamMembers = [
@@ -24,6 +28,49 @@ export default function AboutPage() {
     { name: "Tony Jreige", role: "Head of Development Delivery", image: "https://ext.same-assets.com/319956013/331448573.jpeg" },
   ];
 
+  // Animaciones y lógica para acordeón
+  const fadeInUp = {
+    hidden: { opacity: 0, y: 60 },
+    visible: { opacity: 1, y: 0 }
+  };
+  const fadeInRight = {
+    hidden: { opacity: 0, x: 50 },
+    visible: { opacity: 1, x: 0 }
+  };
+
+  const [expandedStep, setExpandedStep] = useState<string | null>(null);
+
+  const steps = [
+    {
+      name: "Acquisition",
+      desc: "We identify and secure prime sites in sought-after locations, ensuring every project starts with a strong foundation for success."
+    },
+    {
+      name: "Planning",
+      desc: "Our expert team navigates the planning process, working closely with authorities and stakeholders to deliver well-considered outcomes."
+    },
+    {
+      name: "Design",
+      desc: "We collaborate with leading architects and designers to create spaces that are functional, beautiful, and built for real life."
+    },
+    {
+      name: "Construction",
+      desc: "Our in-house construction team delivers quality and consistency at every stage, with a focus on safety, efficiency, and craftsmanship."
+    },
+    {
+      name: "Property Management",
+      desc: "We manage our properties with care, ensuring they remain vibrant, well-maintained, and a pleasure to live in for years to come."
+    },
+    {
+      name: "Aftercare",
+      desc: "Our commitment doesn’t end at handover. We provide ongoing support and aftercare to ensure lasting satisfaction for our residents."
+    }
+  ];
+
+  const handleToggleStep = (step: string) => {
+    setExpandedStep(expandedStep === step ? null : step);
+  };
+
   return (
     <div className="min-h-screen bg-white">
       {/* Shared Navbar */}
@@ -35,22 +82,30 @@ export default function AboutPage() {
         {/* Hero Section */}
         <section className="py-20 bg-white">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            <div className="grid grid-cols-1 gap-12 items-center">
               <div>
-                <h1 className="text-5xl md:text-6xl font-bold text-black mb-8 leading-tight">
-                  Fully integrated. Personally committed. Built for real life.
+                <h1 className="font-graphik text-5xl md:text-6xl font-bold text-black mb-8 leading-tight ml-10">
+                  Fully integrated. Personally <br /> committed.  Built for real life.
                 </h1>
               </div>
-              <div className="relative">
+              {/*<div className="relative">
+                <img
+                  src="https://ext.same-assets.com/319956013/262662780.jpeg"
+                  alt="Modern living space"
+                  className="w-full h-96 object-cover rounded-lg"
+                />
+              </div>*/}
+            </div>
+
+            <div className="mt-16 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+              <div>
+                {/* Esta es la imagen, ahora a la izquierda */}
                 <img
                   src="https://ext.same-assets.com/319956013/262662780.jpeg"
                   alt="Modern living space"
                   className="w-full h-96 object-cover rounded-lg"
                 />
               </div>
-            </div>
-
-            <div className="mt-16 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
               <div>
                 <h2 className="text-3xl font-bold text-black mb-6">
                   We build places that feel like home and neighbourhoods that bring people together.
@@ -62,9 +117,6 @@ export default function AboutPage() {
                   No shortcuts. No compromises.
                 </p>
               </div>
-              <div>
-                {/* This could be another image or content */}
-              </div>
             </div>
           </div>
         </section>
@@ -74,26 +126,26 @@ export default function AboutPage() {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <h2 className="text-4xl font-bold text-center text-black mb-16">The Urban Way</h2>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-12 divide-y md:divide-y-0 md:divide-x divide-gray-300">
               {/* Quality in Every Home */}
-              <div className="text-center">
-                <h3 className="text-2xl font-bold text-black mb-6">Quality in Every Home.</h3>
+              <div className="text-center px-6">
+                <h3 className="text-6xl font-bold text-black mb-6">Quality in Every Home.</h3>
                 <p className="text-gray-700">
                   From first homes to luxury living, affordable options to specialist housing, every Urban home is thoughtfully designed and built to last. Because everyone deserves a place they're proud to call home.
                 </p>
               </div>
 
               {/* Connected Living */}
-              <div className="text-center">
-                <h3 className="text-2xl font-bold text-black mb-6">Connected Living, Made Easy.</h3>
+              <div className="text-center px-6">
+                <h3 className="text-6xl font-bold text-black mb-6">Connected Living, Made Easy.</h3>
                 <p className="text-gray-700">
                   We build homes close to transport, shops, and services - making everyday life easier. Our communities are vibrant, sustainable, and thoughtfully designed to help you feel at home from day one.
                 </p>
               </div>
 
               {/* Smart Delivery */}
-              <div className="text-center">
-                <h3 className="text-2xl font-bold text-black mb-6">Smart Delivery. Personal Touch.</h3>
+              <div className="text-center px-6">
+                <h3 className="text-6xl font-bold text-black mb-6">Smart Delivery. Personal Touch.</h3>
                 <p className="text-gray-700">
                   We manage every step of the journey, from land to handover, with the experience of a skilled team and the care of a family-run business. Our integrated model means faster decisions, stronger delivery, and homes built with purpose, pride, and no shortcuts.
                 </p>
@@ -105,11 +157,15 @@ export default function AboutPage() {
         {/* Large Building Image */}
         <section className="py-0">
           <div className="w-full">
-            <img
-              src="https://ext.same-assets.com/319956013/163485647.jpeg"
-              alt="Urban development"
-              className="w-full h-96 md:h-[32rem] object-cover"
-            />
+            <video
+                  src="/videos/urban-development.mp4"
+                  className="w-full h-96 md:h-[32rem] object-cover"
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
+                  poster="/images/urban-development-poster.jpg"
+                />
           </div>
         </section>
 
@@ -164,44 +220,43 @@ export default function AboutPage() {
                 />
               </div>
 
-              <div className="space-y-4">
-                <div className="border-b border-gray-200 py-4">
-                  <button className="flex justify-between items-center w-full text-left">
-                    <span className="text-xl font-bold text-black">Acquisition</span>
-                    <span className="text-2xl text-gray-400">+</span>
-                  </button>
-                </div>
-                <div className="border-b border-gray-200 py-4">
-                  <button className="flex justify-between items-center w-full text-left">
-                    <span className="text-xl font-bold text-black">Planning</span>
-                    <span className="text-2xl text-gray-400">+</span>
-                  </button>
-                </div>
-                <div className="border-b border-gray-200 py-4">
-                  <button className="flex justify-between items-center w-full text-left">
-                    <span className="text-xl font-bold text-black">Design</span>
-                    <span className="text-2xl text-gray-400">+</span>
-                  </button>
-                </div>
-                <div className="border-b border-gray-200 py-4">
-                  <button className="flex justify-between items-center w-full text-left">
-                    <span className="text-xl font-bold text-black">Construction</span>
-                    <span className="text-2xl text-gray-400">+</span>
-                  </button>
-                </div>
-                <div className="border-b border-gray-200 py-4">
-                  <button className="flex justify-between items-center w-full text-left">
-                    <span className="text-xl font-bold text-black">Property Management</span>
-                    <span className="text-2xl text-gray-400">+</span>
-                  </button>
-                </div>
-                <div className="border-b border-gray-200 py-4">
-                  <button className="flex justify-between items-center w-full text-left">
-                    <span className="text-xl font-bold text-black">Aftercare</span>
-                    <span className="text-2xl text-gray-400">+</span>
-                  </button>
-                </div>
-              </div>
+              <motion.div className="space-y-4" variants={fadeInRight} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.2 }}>
+                {steps.map((step, index) => (
+                  <motion.div
+                    key={step.name}
+                    className="border-b border-gray-200 py-4"
+                    variants={fadeInUp}
+                    transition={{ delay: index * 0.1 }}
+                  >
+                    <button
+                      className="flex justify-between items-center w-full text-left hover:opacity-80 transition-opacity"
+                      onClick={() => handleToggleStep(step.name)}
+                      aria-expanded={expandedStep === step.name}
+                      aria-controls={`desc-${step.name}`}
+                    >
+                      <span className="text-xl font-bold text-black">{step.name}</span>
+                      <span className={`text-2xl text-gray-400 transition-transform duration-200 ${expandedStep === step.name ? "rotate-45" : ""}`}>+</span>
+                    </button>
+                    <AnimatePresence initial={false}>
+                      {expandedStep === step.name && (
+                        <motion.div
+                          id={`desc-${step.name}`}
+                          key={step.name}
+                          initial={{ opacity: 0, height: 0 }}
+                          animate={{ opacity: 1, height: "auto" }}
+                          exit={{ opacity: 0, height: 0 }}
+                          transition={{ opacity: { duration: 0.25 }, height: { duration: 0.35, ease: [0.4, 0, 0.2, 1] } }}
+                          className="overflow-hidden"
+                        >
+                          <div className="mt-4 text-gray-700 text-base">
+                            {step.desc}
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </motion.div>
+                ))}
+              </motion.div>
             </div>
           </div>
         </section>
@@ -252,7 +307,7 @@ export default function AboutPage() {
         </section>
 
         {/* Partners Section */}
-        <section className="py-20 bg-gray-50">
+        {/*<section className="py-20 bg-gray-50">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <h2 className="text-sm font-medium text-gray-500 mb-12 tracking-wide">TOGETHER, WE BUILD BETTER.</h2>
 
@@ -279,7 +334,7 @@ export default function AboutPage() {
               />
             </div>
           </div>
-        </section>
+        </section>*/}
 
       </main>
 
