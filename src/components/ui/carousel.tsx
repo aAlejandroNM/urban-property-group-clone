@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 // 2) Hacer que las imágenes laterales sean más anchas / estén más pegadas a los laterales (reducir gap).
 // 3) Mantener la distribución (centro más grande) pero evitar diferencias de altura visual.
 
-export default function CarouselTranslate3d({ projects }) {
+export default function CarouselTranslate3d({ projects }: { projects?: Array<{ image: string; title: string; location: string; status: string }> }) {
   const defaultProjects = [
     {
       image: "https://ext.same-assets.com/319956013/1658223507.jpeg",
@@ -38,18 +38,18 @@ export default function CarouselTranslate3d({ projects }) {
 
   const trackRef = useRef(null);
   // refs array to measure each slide width
-  const slideRefs = useRef([]);
-  const [slideWidths, setSlideWidths] = useState([]);
+  const slideRefs = useRef<Array<HTMLDivElement | null>>([]);
+  const [slideWidths, setSlideWidths] = useState<number[]>([]);
   const [currentSlide, setCurrentSlide] = useState(1); // index in slides (1..n)
   const [transitioning, setTransitioning] = useState(false);
   const GAP_PX = 80; // reduje gap para que los laterales estén más cerca
-  const [viewportWidth, setViewportWidth] = useState(null);
+  const [viewportWidth, setViewportWidth] = useState<number | null>(null);
 
   // measure widths of all slides
   const measureAll = () => {
     const widths = slides.map((_, i) => {
       const el = slideRefs.current[i];
-      return el ? Math.round(el.getBoundingClientRect().width) : 0;
+      return el ? Math.round((el as HTMLDivElement).getBoundingClientRect().width) : 0;
     });
     setSlideWidths(widths);
 
@@ -85,7 +85,7 @@ export default function CarouselTranslate3d({ projects }) {
   }, [currentSlide, slideWidths]);
 
   // compute cumulative offset before index i (sum widths + gaps)
-  const offsetBefore = (idx) => {
+  const offsetBefore = (idx: number) => {
     let sum = 0;
     for (let i = 0; i < idx; i++) {
       sum += (slideWidths[i] || 0) + GAP_PX;
@@ -129,8 +129,8 @@ export default function CarouselTranslate3d({ projects }) {
       }
     };
 
-    track.addEventListener("transitionend", onTransitionEnd);
-    return () => track.removeEventListener("transitionend", onTransitionEnd);
+    (track as HTMLElement).addEventListener("transitionend", onTransitionEnd);
+        return () => (track as HTMLElement).removeEventListener("transitionend", onTransitionEnd);
   }, [currentSlide, slides.length]);
 
   // when we programmatically change currentSlide to the 'real' position after hitting a clone,
@@ -187,8 +187,8 @@ export default function CarouselTranslate3d({ projects }) {
               : "w-[58vw] md:w-[340px] pointer-events-none";
 
             // Assign refs so we can measure widths
-            const setRef = (el) => {
-              slideRefs.current[i] = el;
+            const setRef = (el: HTMLDivElement | null) => {
+                          slideRefs.current[i] = el;
             };
 
             return (
