@@ -1,4 +1,7 @@
+"use client";
+
 import Link from "next/link";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -6,6 +9,84 @@ import { Textarea } from "@/components/ui/textarea";
 import Navbar from "@/components/ui/Navbar";
 
 export default function ContactPage() {
+  // Estados para los campos del formulario
+  const [form, setForm] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    phone: "",
+    enquiryType: "",
+    country: "australia",
+    postcode: "",
+    message: "",
+    privacy: false,
+    newsletter: false,
+  });
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
+  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
+
+  // Validación simple
+  const validate = () => {
+    const newErrors: { [key: string]: string } = {};
+    if (!form.firstName) newErrors.firstName = "First name is required";
+    if (!form.lastName) newErrors.lastName = "Last name is required";
+    if (!form.email) newErrors.email = "Email is required";
+    else if (!/^[\w-.]+@([\w-]+\.)+[\w-]{2,}$/.test(form.email)) newErrors.email = "Invalid email";
+    if (!form.phone) newErrors.phone = "Phone is required";
+    if (!form.privacy) newErrors.privacy = "You must accept the Privacy Policy";
+    return newErrors;
+  };
+
+  // Manejo de cambios en los campos
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    const { id, value, type, checked } = e.target;
+    setForm((prev) => ({
+      ...prev,
+      [id]: type === "checkbox" ? checked : value,
+    }));
+  };
+
+  // Envío del formulario
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setSuccess(false);
+    const validationErrors = validate();
+    setErrors(validationErrors);
+    if (Object.keys(validationErrors).length > 0) return;
+
+    setLoading(true);
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
+      if (res.ok) {
+        setSuccess(true);
+        setForm({
+          firstName: "",
+          lastName: "",
+          email: "",
+          phone: "",
+          enquiryType: "",
+          country: "australia",
+          postcode: "",
+          message: "",
+          privacy: false,
+          newsletter: false,
+        });
+        setErrors({});
+      } else {
+        const data = await res.json();
+        setErrors({ api: data.error || "Error sending message" });
+      }
+    } catch {
+      setErrors({ api: "Network error" });
+    }
+    setLoading(false);
+  };
+
   return (
     <div className="min-h-screen bg-white">
       {/* Shared Navbar */}
@@ -21,24 +102,42 @@ export default function ContactPage() {
               <div className="border-l-4 border-gray-300 pl-8">
                 <h1 className="text-4xl font-bold text-black mb-12">Get in touch</h1>
 
-                <form className="space-y-6">
+                <form className="space-y-6" onSubmit={handleSubmit} noValidate>
+                  {/* Mensaje de éxito */}
+                  {success && (
+                    <div className="p-4 bg-green-100 text-green-800 rounded">
+                      ¡Mensaje enviado correctamente!
+                    </div>
+                  )}
+                  {/* Mensaje de error general */}
+                  {errors.api && (
+                    <div className="p-4 bg-red-100 text-red-800 rounded">
+                      {errors.api}
+                    </div>
+                  )}
                   {/* Name Fields */}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                       <Label htmlFor="firstName" className="text-sm font-medium text-gray-700">First name*</Label>
                       <Input
                         id="firstName"
-                        className="mt-1 border-0 border-b-2 border-gray-300 rounded-none bg-transparent focus:border-black focus:ring-0 px-0"
+                        value={form.firstName}
+                        onChange={handleChange}
+                        className={`mt-1 border-0 border-b-2 border-gray-300 rounded-none bg-transparent focus:border-black focus:ring-0 px-0 ${errors.firstName ? "border-red-500" : ""}`}
                         placeholder=""
                       />
+                      {errors.firstName && <span className="text-xs text-red-600">{errors.firstName}</span>}
                     </div>
                     <div>
                       <Label htmlFor="lastName" className="text-sm font-medium text-gray-700">Last name*</Label>
                       <Input
                         id="lastName"
-                        className="mt-1 border-0 border-b-2 border-gray-300 rounded-none bg-transparent focus:border-black focus:ring-0 px-0"
+                        value={form.lastName}
+                        onChange={handleChange}
+                        className={`mt-1 border-0 border-b-2 border-gray-300 rounded-none bg-transparent focus:border-black focus:ring-0 px-0 ${errors.lastName ? "border-red-500" : ""}`}
                         placeholder=""
                       />
+                      {errors.lastName && <span className="text-xs text-red-600">{errors.lastName}</span>}
                     </div>
                   </div>
 
@@ -48,9 +147,12 @@ export default function ContactPage() {
                     <Input
                       id="email"
                       type="email"
-                      className="mt-1 border-0 border-b-2 border-gray-300 rounded-none bg-transparent focus:border-black focus:ring-0 px-0"
+                      value={form.email}
+                      onChange={handleChange}
+                      className={`mt-1 border-0 border-b-2 border-gray-300 rounded-none bg-transparent focus:border-black focus:ring-0 px-0 ${errors.email ? "border-red-500" : ""}`}
                       placeholder=""
                     />
+                    {errors.email && <span className="text-xs text-red-600">{errors.email}</span>}
                   </div>
 
                   {/* Phone */}
@@ -59,9 +161,12 @@ export default function ContactPage() {
                     <Input
                       id="phone"
                       type="tel"
-                      className="mt-1 border-0 border-b-2 border-gray-300 rounded-none bg-transparent focus:border-black focus:ring-0 px-0"
+                      value={form.phone}
+                      onChange={handleChange}
+                      className={`mt-1 border-0 border-b-2 border-gray-300 rounded-none bg-transparent focus:border-black focus:ring-0 px-0 ${errors.phone ? "border-red-500" : ""}`}
                       placeholder=""
                     />
+                    {errors.phone && <span className="text-xs text-red-600">{errors.phone}</span>}
                   </div>
 
                   {/* Enquiry Type */}
@@ -69,6 +174,8 @@ export default function ContactPage() {
                     <Label htmlFor="enquiryType" className="text-sm font-medium text-gray-700">Enquiry Type</Label>
                     <select
                       id="enquiryType"
+                      value={form.enquiryType}
+                      onChange={handleChange}
                       className="mt-1 w-full border-0 border-b-2 border-gray-300 rounded-none bg-transparent focus:border-black focus:ring-0 px-0 py-2"
                     >
                       <option value="">Select enquiry type</option>
@@ -85,6 +192,8 @@ export default function ContactPage() {
                       <Label htmlFor="country" className="text-sm font-medium text-gray-700">Country</Label>
                       <select
                         id="country"
+                        value={form.country}
+                        onChange={handleChange}
                         className="mt-1 w-full border-0 border-b-2 border-gray-300 rounded-none bg-transparent focus:border-black focus:ring-0 px-0 py-2"
                       >
                         <option value="australia">Australia</option>
@@ -96,6 +205,8 @@ export default function ContactPage() {
                       <Label htmlFor="postcode" className="text-sm font-medium text-gray-700">Postcode</Label>
                       <Input
                         id="postcode"
+                        value={form.postcode}
+                        onChange={handleChange}
                         className="mt-1 border-0 border-b-2 border-gray-300 rounded-none bg-transparent focus:border-black focus:ring-0 px-0"
                         placeholder=""
                       />
@@ -108,6 +219,8 @@ export default function ContactPage() {
                     <Textarea
                       id="message"
                       rows={4}
+                      value={form.message}
+                      onChange={handleChange}
                       className="mt-1 border-2 border-gray-300 rounded-none bg-transparent focus:border-black focus:ring-0 resize-none"
                       placeholder="Message"
                     />
@@ -116,13 +229,26 @@ export default function ContactPage() {
                   {/* Checkboxes */}
                   <div className="space-y-3">
                     <div className="flex items-start space-x-3">
-                      <input type="checkbox" id="privacy" className="mt-1" />
+                      <input
+                        type="checkbox"
+                        id="privacy"
+                        checked={form.privacy}
+                        onChange={handleChange}
+                        className="mt-1"
+                      />
                       <label htmlFor="privacy" className="text-sm text-gray-700">
                         I agree to the <a href="#" className="underline">Privacy Policy</a> and accept the <a href="#" className="underline">Terms of Use</a>
                       </label>
                     </div>
+                    {errors.privacy && <span className="text-xs text-red-600">{errors.privacy}</span>}
                     <div className="flex items-start space-x-3">
-                      <input type="checkbox" id="newsletter" className="mt-1" />
+                      <input
+                        type="checkbox"
+                        id="newsletter"
+                        checked={form.newsletter}
+                        onChange={handleChange}
+                        className="mt-1"
+                      />
                       <label htmlFor="newsletter" className="text-sm text-gray-700">
                         Subscribe to our newsletter
                       </label>
@@ -131,8 +257,12 @@ export default function ContactPage() {
 
                   {/* Submit Button */}
                   <div className="pt-6">
-                    <Button className="bg-white text-black border-2 border-black hover:bg-black hover:text-white rounded-full px-8 py-6 text-base">
-                      Submit
+                    <Button
+                      className="bg-white text-black border-2 border-black hover:bg-black hover:text-white rounded-full px-8 py-6 text-base"
+                      type="submit"
+                      disabled={loading}
+                    >
+                      {loading ? "Sending..." : "Submit"}
                     </Button>
                   </div>
                 </form>
