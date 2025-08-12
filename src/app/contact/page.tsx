@@ -39,8 +39,12 @@ export default function ContactPage() {
   };
 
   // Manejo de cambios en los campos
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    const { id, value, type, checked } = e.target;
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+  ) => {
+    const { id, value, type } = e.target;
+    const checked = type === "checkbox" && "checked" in e.target ? e.target.checked : false;
+
     setForm((prev) => ({
       ...prev,
       [id]: type === "checkbox" ? checked : value,
