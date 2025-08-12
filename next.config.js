@@ -1,7 +1,12 @@
 /** @type {import('next').NextConfig} */
+const isProd = process.env.NODE_ENV === 'production';
+const repoName = '/urban-property-group-clone'; // sin slash final para basePath
+
 const nextConfig = {
   output: 'export',
   distDir: 'out',
+  basePath: isProd ? repoName : '',
+  assetPrefix: isProd ? `${repoName}/` : '',
   allowedDevOrigins: ["*.preview.same-app.com"],
   images: {
     unoptimized: true,
