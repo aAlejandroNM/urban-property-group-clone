@@ -240,14 +240,17 @@ export default function ProjectsPage() {
           <Reveal>
           <div className="mb-20">
             <h3 className="text-3xl font-bold text-black mb-8">View by location</h3>
-            <div className="bg-gray-100 rounded-lg h-96 flex items-center justify-center">
-              <div className="text-center text-gray-500">
-                <svg className="w-16 h-16 mx-auto mb-4 opacity-50" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd" />
-                </svg>
-                <p className="text-lg">Interactive Map</p>
-                <p className="text-sm">Explore our projects across NSW</p>
-              </div>
+            <div className="bg-gray-100 rounded-lg h-96 flex items-center justify-center overflow-hidden">
+              <iframe
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3971.073060824878!2d-73.34824462505628!3d5.5561886336478645!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8e6a7d6072b25591%3A0xa1b4bf6452764811!2sViva%20Centro%20Comercial.!5e0!3m2!1ses-419!2sco!4v1754863017708!5m2!1ses-419!2sco"
+                width="100%"
+                height="100%"
+                style={{ border: 0 }}
+                allowFullScreen
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+                className="w-full h-full rounded-lg"
+              ></iframe>
             </div>
           </div>
           </Reveal>
