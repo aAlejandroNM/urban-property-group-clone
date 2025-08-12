@@ -5,8 +5,6 @@ const repoName = '/urban-property-group-clone'; // sin slash final para basePath
 const nextConfig = {
   output: 'export',
   distDir: 'out',
-  basePath: isProd ? '/urban-property-group-clone' : '',
-  assetPrefix: isProd ? '/urban-property-group-clone/' : '',
   allowedDevOrigins: ["*.preview.same-app.com"],
   images: {
     unoptimized: true,
