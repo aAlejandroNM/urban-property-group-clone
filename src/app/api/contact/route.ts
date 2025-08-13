@@ -10,7 +10,7 @@ export async function POST() {
     email: ["desarrollador1@doxasistemas.com"],
     copy: ["julian.moyano02@uptc.edu.co"],
     subject: "Azure Mail file",
-    message: <p><strong>Hola,</strong></p><p>Este es un correo de prueba desde <em>Azure Logic Apps</em>.</p><p>Saludos,</p><p><b>El equipo de Azure</b></p>,
+    message: "<p><strong>Hola,</strong></p><p>Este es un correo de prueba desde <em>Azure Logic Apps</em>.</p><p>Saludos,</p><p><b>El equipo de Azure</b></p>",
     attachments: [
       {
         name: "prueba.txt",
