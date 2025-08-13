@@ -112,6 +112,7 @@ export default function Home() {
   return (
     <div className="relative min-h-screen overflow-x-hidden"> {/* <-- Añadido overflow-x-hidden */}
       {/* Background Image */}
+      {
       <div
         className="absolute inset-0 w-full h-full object-cover -z-10"
         style={{
@@ -121,6 +122,17 @@ export default function Home() {
           backgroundRepeat: "no-repeat",
         }}
       />
+      }
+      {/*
+      <video
+        className="absolute inset-0 w-full h-full object-cover -z-10"
+        src="/videos/urban-development.mp4"
+        autoPlay
+        loop
+        muted
+        playsInline
+      />
+      */}
 
       {/* Navbar with transparent hero support */}
       <Navbar transparentOnHero={true} heroHeight={600} />
