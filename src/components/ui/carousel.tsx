@@ -159,7 +159,11 @@ export default function CarouselTranslate3d({ projects }: { projects?: Array<{ i
       {/* Centered viewport with exact width to show only 3 slides */}
       <div
         className="mx-auto relative overflow-hidden"
-        style={{ width: viewportWidth ? `${viewportWidth}px` : "100%", transition: "width 160ms" }}
+        style={{
+          width: viewportWidth ? `${viewportWidth}px` : "100%",
+          maxWidth: "100vw", // <-- Limita el ancho máximo al viewport
+          transition: "width 160ms"
+        }}
       >
         <div
           ref={trackRef}
@@ -170,6 +174,7 @@ export default function CarouselTranslate3d({ projects }: { projects?: Array<{ i
             transition: transitioning ? "transform 0.5s ease" : "none",
             willChange: "transform",
             alignItems: "center",
+            minWidth: "100%", // <-- Asegura que el track no sea menor que el contenedor
           }}
         >
           {slides.map((p, i) => {
@@ -183,8 +188,8 @@ export default function CarouselTranslate3d({ projects }: { projects?: Array<{ i
 
             // Proporciones: centro más grande; laterales más anchas que antes
             const base = isCenter
-              ? "w-[65vw] md:w-[400px] z-20"
-              : "w-[58vw] md:w-[340px] pointer-events-none";
+              ? "w-[65vw] max-w-[400px] z-20"
+              : "w-[58vw] max-w-[340px] pointer-events-none"; // <-- Añadido max-w para evitar desbordes
 
             // Assign refs so we can measure widths
             const setRef = (el: HTMLDivElement | null) => {
