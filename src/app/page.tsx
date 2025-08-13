@@ -110,7 +110,7 @@ export default function Home() {
   };
 
   return (
-    <div className="relative min-h-screen">
+    <div className="relative min-h-screen overflow-x-hidden"> {/* <-- Añadido overflow-x-hidden */}
       {/* Background Image */}
       <div
         className="absolute inset-0 w-full h-full object-cover -z-10"
@@ -284,7 +284,7 @@ export default function Home() {
         >
           <div className="font-graphik max-w-7xl mx-auto px-0 text-left">
             <motion.h2
-              className="text-5xl font-bold text-black mb-20 max-w-[50%] break-words -ml-8"
+              className="text-5xl font-bold text-black mb-20 max-w-[50%] break-words"
               variants={fadeInUp}
             >
               No shortcuts. No compromises. Just great places, built for living.
