@@ -14,6 +14,7 @@ export default function Navbar({ transparentOnHero = false, heroHeight = 400 }: 
   const [isScrolled, setIsScrolled] = useState(false);
   const pathname = usePathname();
   const [showNavbar, setShowNavbar] = useState(true);
+  const [mobileOpen, setMobileOpen] = useState(false);
   const lastScrollY = useRef(0);
 
   useEffect(() => {
@@ -34,6 +35,11 @@ export default function Navbar({ transparentOnHero = false, heroHeight = 400 }: 
     handleScroll();
     return () => window.removeEventListener("scroll", handleScroll);
   }, [heroHeight]);
+
+  // Cierra el menú móvil al cambiar de ruta
+  useEffect(() => {
+    setMobileOpen(false);
+  }, [pathname]);
 
   const navLinks = [
     { href: "/about", label: "About" },
@@ -80,6 +86,9 @@ export default function Navbar({ transparentOnHero = false, heroHeight = 400 }: 
     }
   `;
 
+  // Color del icono hamburguesa según fondo
+  const burgerColor = isScrolled || !transparentOnHero ? "#000" : "#fff";
+
   return (
     <header className={`${navbarClasses} transition-transform duration-300 ${showNavbar ? "translate-y-0" : "-translate-y-full"}`}>
       <nav className="font-graphik max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -111,10 +120,11 @@ export default function Navbar({ transparentOnHero = false, heroHeight = 400 }: 
           <div className="md:hidden">
             <button
               type="button"
-              className={`p-2 rounded-md transition-colors duration-200 ${textClasses} hover:bg-black/10`}
+              className={`p-2 rounded-md transition-colors duration-200 focus:outline-none`}
               aria-label="Toggle menu"
+              onClick={() => setMobileOpen((open) => !open)}
             >
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-7 h-7" fill="none" stroke={burgerColor} viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
               </svg>
             </button>
@@ -123,6 +133,35 @@ export default function Navbar({ transparentOnHero = false, heroHeight = 400 }: 
           {/* Empty div to balance the flex layout */}
           <div className="hidden md:block w-20"></div>
         </div>
+        {/* Mobile menu */}
+        {mobileOpen && (
+          <div
+            className={`
+              md:hidden absolute top-20 left-0 w-full z-40
+              ${isScrolled || !transparentOnHero ? "bg-white border-b border-gray-100" : "bg-black/80"}
+              transition-all duration-300
+            `}
+          >
+            <div className="flex flex-col items-center py-6 space-y-4">
+              {navLinks.map((link) => (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className={`
+                    text-2xl font-medium w-full text-center py-2
+                    ${isScrolled || !transparentOnHero
+                      ? isActive(link.href) ? "text-black" : "text-gray-700 hover:text-black"
+                      : isActive(link.href) ? "text-white" : "text-white/80 hover:text-white"
+                    }
+                  `}
+                  onClick={() => setMobileOpen(false)}
+                >
+                  {link.label}
+                </Link>
+              ))}
+            </div>
+          </div>
+        )}
       </nav>
     </header>
   );
